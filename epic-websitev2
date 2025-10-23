@@ -1,0 +1,510 @@
+import React, { useState } from 'react';
+import { User, Building2, Mail, Phone, KeyRound, UserCircle, LogOut, Settings, Plus, Edit2, Trash2, ShoppingCart, Award, Upload } from 'lucide-react';
+
+const EpicWebsite = () => {
+    const [page, setPage] = useState('home');
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [users, setUsers] = useState([]);
+    const [user, setUser] = useState(null);
+    const [products, setProducts] = useState([]);
+    const [purchases, setPurchases] = useState([]);
+    const STUDENT_MONEY_LIMIT = 500;
+
+    const rewards = [
+        { id: 1, name: 'Free Coffee', points: 50 },
+        { id: 2, name: '10% Discount', points: 100 },
+        { id: 3, name: '25% Discount', points: 250 },
+        { id: 4, name: 'Free Item', points: 500 }
+    ];
+
+    const Nav = () => (
+        <nav className="fixed top-0 w-full bg-black/80 backdrop-blur-md z-50 border-b border-white/10">
+            <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+                <div className="text-3xl font-bold text-white">EPIC</div>
+                <div className="flex gap-3 flex-wrap">
+                    {isLoggedIn ? (
+                        <>
+                            {user.accountType === 'student' && (
+                                <>
+                                    <button onClick={() => setPage('shop')} className="px-4 py-2 border border-white/30 rounded-full hover:bg-white hover:text-black transition-all">Shop</button>
+                                    <button onClick={() => setPage('rewards')} className="px-4 py-2 border border-white/30 rounded-full hover:bg-white hover:text-black transition-all">Rewards</button>
+                                </>
+                            )}
+                            {user.accountType === 'company' && (
+                                <button onClick={() => setPage('products')} className="px-4 py-2 border border-white/30 rounded-full hover:bg-white hover:text-black transition-all">Products</button>
+                            )}
+                            <button onClick={() => setPage('settings')} className="px-4 py-2 border border-white/30 rounded-full hover:bg-white hover:text-black transition-all">Settings</button>
+                            <button onClick={() => { setIsLoggedIn(false); setUser(null); setPage('home'); }} className="px-4 py-2 bg-white text-black rounded-full hover:bg-gray-200 transition-all">Logout</button>
+                        </>
+                    ) : (
+                        <>
+                            <button onClick={() => setPage('login')} className="px-4 py-2 border border-white/30 rounded-full hover:bg-white hover:text-black transition-all">Login</button>
+                            <button onClick={() => setPage('signup')} className="px-4 py-2 bg-white text-black rounded-full hover:bg-gray-200 transition-all">Sign Up</button>
+                        </>
+                    )}
+                </div>
+            </div>
+        </nav>
+    );
+
+    if (page === 'home') {
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white">
+                <Nav />
+                <div className="pt-32 px-6 max-w-7xl mx-auto">
+                    <div className="text-center mb-16">
+                        <div className="flex justify-center mb-8">
+                            <img src="https://i.imgur.com/YourImageURL.png" alt="EPIC Logo" className="w-48 h-48" onError={(e) => {
+                                e.target.style.display = 'none';
+                                const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                                svg.setAttribute('viewBox', '0 0 800 1100');
+                                svg.setAttribute('class', 'w-48 h-48');
+                                svg.innerHTML = `<circle cx="400" cy="350" r="280" fill="none" stroke="white" stroke-width="20"/><line x1="400" y1="70" x2="400" y2="630" stroke="white" stroke-width="20"/><line x1="120" y1="350" x2="680" y2="350" stroke="white" stroke-width="20"/><g transform="translate(150, 120)"><rect x="15" y="110" width="35" height="65" fill="white"/><rect x="65" y="80" width="35" height="95" fill="white"/><rect x="115" y="50" width="35" height="125" fill="white"/><rect x="165" y="20" width="35" height="155" fill="white"/><polyline points="32,130 82,100 132,70 182,40" fill="none" stroke="white" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/><polygon points="195,30 182,40 182,52" fill="white"/></g><g transform="translate(480, 140)"><rect x="25" y="95" width="110" height="85" fill="white"/><rect x="35" y="82" width="90" height="13" fill="white"/><ellipse cx="80" cy="50" rx="55" ry="35" fill="white"/><rect x="73" y="20" width="14" height="30" fill="white"/><rect x="60" y="13" width="40" height="13" fill="white"/><rect x="42" y="105" width="12" height="65" fill="black"/><rect x="62" y="105" width="12" height="65" fill="black"/><rect x="82" y="105" width="12" height="65" fill="black"/><rect x="102" y="105" width="12" height="65" fill="black"/><rect x="122" y="105" width="12" height="65" fill="black"/></g><g transform="translate(160, 440)"><circle cx="85" cy="85" r="70" fill="none" stroke="white" stroke-width="16"/><path d="M 65 58 Q 85 42 105 58 L 105 82 Q 85 100 65 82 Z" fill="white"/><rect x="77" y="102" width="16" height="26" fill="white"/><rect x="72" y="128" width="26" height="10" fill="white"/><line x1="70" y1="142" x2="100" y2="142" stroke="white" stroke-width="8" stroke-linecap="round"/></g><g transform="translate(485, 445)"><path d="M 155 85 A 65 65 0 1 1 154.7 84.7" fill="none" stroke="white" stroke-width="22" stroke-linecap="round"/><polygon points="175,68 155,48 145,62" fill="white"/></g><text x="400" y="820" font-family="Arial, sans-serif" font-size="180" font-weight="bold" fill="white" text-anchor="middle" letter-spacing="8">E.P.I.C.</text><text x="400" y="940" font-family="Arial, sans-serif" font-size="56" font-weight="600" fill="white" text-anchor="middle" letter-spacing="4">ECONOMY, POLITICS,</text><text x="400" y="1020" font-family="Arial, sans-serif" font-size="56" font-weight="600" fill="white" text-anchor="middle" letter-spacing="4">INNOVATION & CHANGE</text>`;
+                                e.target.parentNode.appendChild(svg);
+                            }} />
+                        </div>
+                        <h1 className="text-8xl font-bold mb-6 text-white">Welcome to EPIC</h1>
+                        <p className="text-2xl text-gray-400 mb-8">The Ultimate Activity Experience</p>
+                        {isLoggedIn && (
+                            <div className="inline-block bg-white/10 border border-white/20 rounded-2xl px-8 py-4">
+                                <p className="text-xl mb-2">Welcome, <span className="font-bold">{user.username}</span></p>
+                                <p className="text-gray-400">Type: {user.accountType}</p>
+                                {user.accountType === 'student' && (
+                                    <>
+                                        <p className="text-yellow-400 mt-2">Points: {user.points || 0}</p>
+                                        <p className="text-green-400">Balance: ${user.money || 0}</p>
+                                    </>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                    <div className="grid md:grid-cols-3 gap-8">
+                        {isLoggedIn && user.accountType === 'student' ? (
+                            <>
+                                <div className="md:col-span-3 bg-white/5 border border-white/10 rounded-2xl p-8">
+                                    <h3 className="text-2xl font-bold mb-6">My Purchases</h3>
+                                    {purchases.filter(p => p.buyerEmail === user.email).length > 0 ? (
+                                        <>
+                                            <div className="grid md:grid-cols-2 gap-4 mb-4">
+                                                {purchases.filter(p => p.buyerEmail === user.email).map((purchase, idx) => (
+                                                    <div key={idx} className="bg-white/10 border border-white/20 rounded-xl p-4 flex items-center gap-4">
+                                                        {purchase.productImg && (
+                                                            <img src={purchase.productImg} alt={purchase.productName} className="w-20 h-20 object-cover rounded-lg" />
+                                                        )}
+                                                        <div className="flex-1 text-left">
+                                                            <h3 className="font-bold text-lg">{purchase.productName}</h3>
+                                                            <p className="text-gray-400 text-sm">by {purchase.sellerName}</p>
+                                                            <p className="text-green-400 font-semibold">${purchase.price}</p>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                            <div className="bg-white/10 border border-white/20 rounded-xl p-4">
+                                                <p className="text-xl font-bold">Total Spent: <span className="text-red-400">${purchases.filter(p => p.buyerEmail === user.email).reduce((sum, p) => sum + parseFloat(p.price), 0).toFixed(2)}</span></p>
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <div className="text-center py-8">
+                                            <ShoppingCart className="mx-auto mb-4 text-gray-400" size={48} />
+                                            <p className="text-gray-400 text-lg">No purchases yet</p>
+                                            <button onClick={() => setPage('shop')} className="mt-4 px-6 py-2 bg-white text-black rounded-full hover:bg-gray-200 transition-all">Go to Shop</button>
+                                        </div>
+                                    )}
+                                </div>
+                            </>
+                        ) : null}
+                        <div className="bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all">
+                            <h3 className="text-2xl font-bold mb-4">Innovate</h3>
+                            <p className="text-gray-400">Push boundaries</p>
+                        </div>
+                        <div className="bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all">
+                            <h3 className="text-2xl font-bold mb-4">Connect</h3>
+                            <p className="text-gray-400">Build networks</p>
+                        </div>
+                        <div className="bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all cursor-pointer" onClick={() => setPage('about')}>
+                            <h3 className="text-2xl font-bold mb-4">About Us</h3>
+                            <p className="text-gray-400">Learn more & contact</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    if (page === 'signup') {
+        const Signup = () => {
+            const [d, setD] = useState({ username: '', id: '', email: '', phone: '', password: '', accountType: 'student' });
+            const [e, setE] = useState({});
+
+            const submit = () => {
+                const err = {};
+                if (!d.username) err.username = 'Required';
+                if (!d.id) err.id = 'Required';
+                if (!d.email) err.email = 'Required';
+                if (!d.phone) err.phone = 'Required';
+                if (!d.password || d.password.length < 6) err.password = 'Min 6 chars';
+                if (users.find(u => u.email === d.email)) err.email = 'Email taken';
+                setE(err);
+                if (Object.keys(err).length === 0) {
+                    const newUser = { ...d, points: 0, money: 500 };
+                    setUsers([...users, newUser]);
+                    setUser(newUser);
+                    setIsLoggedIn(true);
+                    setPage('home');
+                }
+            };
+
+            return (
+                <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white flex items-center justify-center px-6">
+                    <div className="max-w-md w-full bg-white/5 border border-white/10 rounded-3xl p-8">
+                        <div className="flex justify-center mb-6">
+                            <img src="https://i.imgur.com/YourImageURL.png" alt="EPIC Logo" className="w-32 h-32" onError={(e) => {
+                                e.target.style.display = 'none';
+                                const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                                svg.setAttribute('viewBox', '0 0 800 1100');
+                                svg.setAttribute('class', 'w-32 h-32');
+                                svg.innerHTML = `<circle cx="400" cy="350" r="280" fill="none" stroke="white" stroke-width="20"/><line x1="400" y1="70" x2="400" y2="630" stroke="white" stroke-width="20"/><line x1="120" y1="350" x2="680" y2="350" stroke="white" stroke-width="20"/><g transform="translate(150, 120)"><rect x="15" y="110" width="35" height="65" fill="white"/><rect x="65" y="80" width="35" height="95" fill="white"/><rect x="115" y="50" width="35" height="125" fill="white"/><rect x="165" y="20" width="35" height="155" fill="white"/><polyline points="32,130 82,100 132,70 182,40" fill="none" stroke="white" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/><polygon points="195,30 182,40 182,52" fill="white"/></g><g transform="translate(480, 140)"><rect x="25" y="95" width="110" height="85" fill="white"/><rect x="35" y="82" width="90" height="13" fill="white"/><ellipse cx="80" cy="50" rx="55" ry="35" fill="white"/><rect x="73" y="20" width="14" height="30" fill="white"/><rect x="60" y="13" width="40" height="13" fill="white"/><rect x="42" y="105" width="12" height="65" fill="black"/><rect x="62" y="105" width="12" height="65" fill="black"/><rect x="82" y="105" width="12" height="65" fill="black"/><rect x="102" y="105" width="12" height="65" fill="black"/><rect x="122" y="105" width="12" height="65" fill="black"/></g><g transform="translate(160, 440)"><circle cx="85" cy="85" r="70" fill="none" stroke="white" stroke-width="16"/><path d="M 65 58 Q 85 42 105 58 L 105 82 Q 85 100 65 82 Z" fill="white"/><rect x="77" y="102" width="16" height="26" fill="white"/><rect x="72" y="128" width="26" height="10" fill="white"/><line x1="70" y1="142" x2="100" y2="142" stroke="white" stroke-width="8" stroke-linecap="round"/></g><g transform="translate(485, 445)"><path d="M 155 85 A 65 65 0 1 1 154.7 84.7" fill="none" stroke="white" stroke-width="22" stroke-linecap="round"/><polygon points="175,68 155,48 145,62" fill="white"/></g><text x="400" y="820" font-family="Arial, sans-serif" font-size="180" font-weight="bold" fill="white" text-anchor="middle" letter-spacing="8">E.P.I.C.</text><text x="400" y="940" font-family="Arial, sans-serif" font-size="56" font-weight="600" fill="white" text-anchor="middle" letter-spacing="4">ECONOMY, POLITICS,</text><text x="400" y="1020" font-family="Arial, sans-serif" font-size="56" font-weight="600" fill="white" text-anchor="middle" letter-spacing="4">INNOVATION & CHANGE</text>`;
+                                e.target.parentNode.appendChild(svg);
+                            }} />
+                        </div>
+                        <h2 className="text-4xl font-bold mb-8 text-center">Join EPIC</h2>
+                        <div className="space-y-4">
+                            <div className="relative">
+                                <UserCircle className="absolute left-3 top-3 text-gray-400" size={20} />
+                                <input type="text" placeholder="Username" value={d.username} onChange={(ev) => setD({ ...d, username: ev.target.value })} className="w-full bg-white/10 border border-white/20 rounded-xl pl-12 pr-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-white/50" />
+                                {e.username && <p className="text-red-400 text-sm mt-1">{e.username}</p>}
+                            </div>
+                            <div className="relative">
+                                <User className="absolute left-3 top-3 text-gray-400" size={20} />
+                                <input type="text" placeholder="ID" value={d.id} onChange={(ev) => setD({ ...d, id: ev.target.value })} className="w-full bg-white/10 border border-white/20 rounded-xl pl-12 pr-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-white/50" />
+                                {e.id && <p className="text-red-400 text-sm mt-1">{e.id}</p>}
+                            </div>
+                            <div className="relative">
+                                <Mail className="absolute left-3 top-3 text-gray-400" size={20} />
+                                <input type="email" placeholder="Email" value={d.email} onChange={(ev) => setD({ ...d, email: ev.target.value })} className="w-full bg-white/10 border border-white/20 rounded-xl pl-12 pr-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-white/50" />
+                                {e.email && <p className="text-red-400 text-sm mt-1">{e.email}</p>}
+                            </div>
+                            <div className="relative">
+                                <Phone className="absolute left-3 top-3 text-gray-400" size={20} />
+                                <input type="tel" placeholder="Phone" value={d.phone} onChange={(ev) => setD({ ...d, phone: ev.target.value })} className="w-full bg-white/10 border border-white/20 rounded-xl pl-12 pr-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-white/50" />
+                                {e.phone && <p className="text-red-400 text-sm mt-1">{e.phone}</p>}
+                            </div>
+                            <div className="relative">
+                                <KeyRound className="absolute left-3 top-3 text-gray-400" size={20} />
+                                <input type="password" placeholder="Password" value={d.password} onChange={(ev) => setD({ ...d, password: ev.target.value })} className="w-full bg-white/10 border border-white/20 rounded-xl pl-12 pr-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-white/50" />
+                                {e.password && <p className="text-red-400 text-sm mt-1">{e.password}</p>}
+                            </div>
+                            <div className="flex gap-4">
+                                <button onClick={() => setD({ ...d, accountType: 'student' })} className={`flex-1 py-3 rounded-xl border-2 ${d.accountType === 'student' ? 'bg-white text-black border-white' : 'border-white/20'}`}>Student</button>
+                                <button onClick={() => setD({ ...d, accountType: 'company' })} className={`flex-1 py-3 rounded-xl border-2 ${d.accountType === 'company' ? 'bg-white text-black border-white' : 'border-white/20'}`}>Company</button>
+                            </div>
+                            <button onClick={submit} className="w-full bg-white text-black py-3 rounded-xl font-semibold hover:bg-gray-200">Create Account</button>
+                        </div>
+                        <p className="text-center mt-6 text-gray-400">Have an account? <button onClick={() => setPage('login')} className="text-white hover:underline">Login</button></p>
+                        <button onClick={() => setPage('home')} className="w-full mt-4 text-gray-400 hover:text-white">← Back</button>
+                    </div>
+                </div>
+            );
+        };
+        return <Signup />;
+    }
+
+    if (page === 'login') {
+        const Login = () => {
+            const [d, setD] = useState({ email: '', password: '' });
+            const [err, setErr] = useState('');
+
+            const submit = () => {
+                const u = users.find(u => u.email === d.email && u.password === d.password);
+                if (u) {
+                    // Initialize money if not present (for existing accounts)
+                    if (u.accountType === 'student' && u.money === undefined) {
+                        u.money = 500;
+                    }
+                    setUser(u);
+                    setIsLoggedIn(true);
+                    setPage('home');
+                } else {
+                    setErr('Invalid credentials');
+                }
+            };
+
+            return (
+                <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white flex items-center justify-center px-6">
+                    <div className="max-w-md w-full bg-white/5 border border-white/10 rounded-3xl p-8">
+                        <h2 className="text-4xl font-bold mb-8 text-center">Welcome Back</h2>
+                        <div className="space-y-5">
+                            <div className="relative">
+                                <Mail className="absolute left-3 top-3 text-gray-400" size={20} />
+                                <input type="email" placeholder="Email" value={d.email} onChange={(e) => setD({ ...d, email: e.target.value })} className="w-full bg-white/10 border border-white/20 rounded-xl pl-12 pr-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-white/50" />
+                            </div>
+                            <div className="relative">
+                                <KeyRound className="absolute left-3 top-3 text-gray-400" size={20} />
+                                <input type="password" placeholder="Password" value={d.password} onChange={(e) => setD({ ...d, password: e.target.value })} className="w-full bg-white/10 border border-white/20 rounded-xl pl-12 pr-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-white/50" />
+                            </div>
+                            {err && <p className="text-red-400 text-sm">{err}</p>}
+                            <button onClick={submit} className="w-full bg-white text-black py-3 rounded-xl font-semibold hover:bg-gray-200">Login</button>
+                        </div>
+                        <p className="text-center mt-6 text-gray-400">No account? <button onClick={() => setPage('signup')} className="text-white hover:underline">Sign Up</button></p>
+                        <button onClick={() => setPage('home')} className="w-full mt-4 text-gray-400 hover:text-white">← Back</button>
+                    </div>
+                </div>
+            );
+        };
+        return <Login />;
+    }
+
+    if (page === 'settings') {
+        const switchAccount = () => {
+            const newType = user.accountType === 'student' ? 'company' : 'student';
+            const upd = { ...user, accountType: newType };
+            setUser(upd);
+            setUsers(users.map(u => u.email === user.email ? upd : u));
+            alert(`Switched to ${newType} account!`);
+        };
+
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white flex items-center justify-center px-6">
+                <div className="max-w-md w-full bg-white/5 border border-white/10 rounded-3xl p-8">
+                    <h2 className="text-4xl font-bold mb-8 text-center">Settings</h2>
+
+                    <div className="bg-white/10 rounded-xl p-6 mb-6">
+                        <h3 className="text-xl font-semibold mb-4">Profile</h3>
+                        <div className="space-y-2 text-gray-300">
+                            <p>Username: {user.username}</p>
+                            <p>ID: {user.id}</p>
+                            <p>Email: {user.email}</p>
+                            <p>Phone: {user.phone}</p>
+                        </div>
+                    </div>
+
+                    <div className="bg-white/10 rounded-xl p-6 mb-6">
+                        <h3 className="text-xl font-semibold mb-4">Account Type</h3>
+                        <div className="flex items-center justify-between mb-4">
+                            <div className="flex items-center gap-2">
+                                {user.accountType === 'student' ? <User size={24} /> : <Building2 size={24} />}
+                                <span className="text-lg">{user.accountType === 'student' ? 'Student' : 'Company'}</span>
+                            </div>
+                            <span className="px-3 py-1 bg-white/20 rounded-full text-sm">{user.accountType}</span>
+                        </div>
+                        <button onClick={switchAccount} className="w-full bg-white text-black py-3 rounded-xl font-semibold hover:bg-gray-200 transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2">
+                            {user.accountType === 'student' ? <Building2 size={18} /> : <User size={18} />}
+                            Switch to {user.accountType === 'student' ? 'Company' : 'Student'}
+                        </button>
+                    </div>
+
+                    <button onClick={() => setPage('home')} className="w-full py-3 border border-white/30 rounded-xl hover:bg-white/10">← Back</button>
+                </div>
+            </div>
+        );
+    }
+
+    if (page === 'products') {
+        const Products = () => {
+            const [f, setF] = useState({ name: '', desc: '', price: '', stock: '', img: '' });
+            const [show, setShow] = useState(false);
+            const [edit, setEdit] = useState(null);
+            const myProds = products.filter(p => p.owner === user.email);
+
+            const save = () => {
+                if (f.name && f.price && f.stock) {
+                    if (edit) {
+                        setProducts(products.map(p => p.id === edit.id ? { ...p, ...f } : p));
+                    } else {
+                        setProducts([...products, { ...f, id: Date.now(), owner: user.email, ownerName: user.username, sales: 0 }]);
+                    }
+                    setF({ name: '', desc: '', price: '', stock: '', img: '' });
+                    setShow(false);
+                    setEdit(null);
+                }
+            };
+
+            const handleImg = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onloadend = () => setF({ ...f, img: reader.result });
+                    reader.readAsDataURL(file);
+                }
+            };
+
+            return (
+                <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white p-6">
+                    <div className="max-w-6xl mx-auto pt-24">
+                        <div className="flex justify-between items-center mb-8">
+                            <h1 className="text-4xl font-bold">My Products</h1>
+                            <button onClick={() => { setShow(!show); setEdit(null); setF({ name: '', desc: '', price: '', stock: '', img: '' }); }} className="px-6 py-2 bg-white text-black rounded-full hover:bg-gray-200 flex items-center gap-2">
+                                <Plus size={18} />Add
+                            </button>
+                        </div>
+                        {show && (
+                            <div className="bg-white/5 border border-white/10 rounded-3xl p-8 mb-8">
+                                <h2 className="text-2xl font-bold mb-6">{edit ? 'Edit' : 'New'} Product</h2>
+                                <div className="space-y-4">
+                                    <input type="text" placeholder="Name" value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none" />
+                                    <textarea placeholder="Description" value={f.desc} onChange={(e) => setF({ ...f, desc: e.target.value })} className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none h-24" />
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <input type="number" placeholder="Price" value={f.price} onChange={(e) => setF({ ...f, price: e.target.value })} className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none" />
+                                        <input type="number" placeholder="Stock" value={f.stock} onChange={(e) => setF({ ...f, stock: e.target.value })} className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none" />
+                                    </div>
+                                    <div>
+                                        <label className="flex items-center justify-center w-full border-2 border-dashed border-white/20 rounded-xl px-4 py-8 cursor-pointer hover:border-white/50 transition-all">
+                                            <div className="text-center">
+                                                <Upload className="mx-auto mb-2 text-gray-400" size={32} />
+                                                <span className="text-gray-400">Upload image</span>
+                                            </div>
+                                            <input type="file" accept="image/*" onChange={handleImg} className="hidden" />
+                                        </label>
+                                        {f.img && (
+                                            <div className="mt-4 flex justify-center">
+                                                <img src={f.img} alt="Preview" className="max-w-full max-h-64 object-contain rounded-xl" />
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div className="flex gap-4">
+                                        <button onClick={save} className="flex-1 bg-white text-black py-3 rounded-xl font-semibold hover:bg-gray-200">Save</button>
+                                        <button onClick={() => { setShow(false); setEdit(null); }} className="px-6 py-3 border border-white/30 rounded-xl hover:bg-white/10">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                        <div className="grid md:grid-cols-3 gap-6">
+                            {myProds.map(p => (
+                                <div key={p.id} className="bg-white/5 border border-white/10 rounded-2xl p-6">
+                                    {p.img && <img src={p.img} alt={p.name} className="w-full h-48 object-cover rounded-xl mb-4" />}
+                                    <h3 className="text-xl font-bold mb-2">{p.name}</h3>
+                                    <p className="text-gray-400 mb-4 text-sm">{p.desc}</p>
+                                    <p className="text-lg text-green-400">${p.price}</p>
+                                    <p className="text-sm text-gray-400">Stock: {p.stock} | Sales: {p.sales}</p>
+                                    <div className="flex gap-2 mt-4">
+                                        <button onClick={() => { setEdit(p); setF({ name: p.name, desc: p.desc, price: p.price, stock: p.stock, img: p.img || '' }); setShow(true); }} className="flex-1 px-4 py-2 border border-white/30 rounded-xl hover:bg-white/10">Edit</button>
+                                        <button onClick={() => setProducts(products.filter(pr => pr.id !== p.id))} className="flex-1 px-4 py-2 border border-red-400/30 text-red-400 rounded-xl hover:bg-red-400/10">Delete</button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        <button onClick={() => setPage('home')} className="mt-8 text-gray-400 hover:text-white">← Back</button>
+                    </div>
+                </div>
+            );
+        };
+        return <Products />;
+    }
+
+    if (page === 'shop') {
+        const buy = (p) => {
+            const price = parseFloat(p.price);
+            const currentMoney = user.money || 0;
+
+            if (currentMoney < price) {
+                alert('Insufficient balance!');
+                return;
+            }
+
+            const pts = Math.floor(price * 0.1);
+            const upd = { ...user, points: (user.points || 0) + pts, money: currentMoney - price };
+            setUser(upd);
+            setUsers(users.map(u => u.email === user.email ? upd : u));
+            setProducts(products.map(pr => pr.id === p.id ? { ...pr, sales: pr.sales + 1 } : pr));
+            alert(`Purchased ${p.name}! Earned ${pts} points! Remaining balance: ${upd.money.toFixed(2)}`);
+        };
+
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white p-6">
+                <div className="max-w-6xl mx-auto pt-24">
+                    <h1 className="text-4xl font-bold mb-8">Shop</h1>
+                    <div className="grid md:grid-cols-3 gap-6">
+                        {products.map(p => (
+                            <div key={p.id} className="bg-white/5 border border-white/10 rounded-2xl p-6">
+                                {p.img && <img src={p.img} alt={p.name} className="w-full h-48 object-cover rounded-xl mb-4" />}
+                                <h3 className="text-xl font-bold mb-2">{p.name}</h3>
+                                <p className="text-sm text-gray-400 mb-2">by {p.ownerName}</p>
+                                <p className="text-gray-400 mb-4 text-sm">{p.desc}</p>
+                                <p className="text-lg text-green-400 mb-4">${p.price}</p>
+                                <button onClick={() => buy(p)} className="w-full bg-white text-black py-2 rounded-xl font-semibold hover:bg-gray-200">Buy Now</button>
+                            </div>
+                        ))}
+                    </div>
+                    {products.length === 0 && <p className="text-center text-gray-400 py-12">No products yet</p>}
+                    <button onClick={() => setPage('home')} className="mt-8 text-gray-400 hover:text-white">← Back</button>
+                </div>
+            </div>
+        );
+    }
+
+    if (page === 'about') {
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white p-6">
+                <div className="max-w-4xl mx-auto pt-24">
+                    <h1 className="text-5xl font-bold mb-8 text-center">About EPIC</h1>
+                    <div className="bg-white/5 border border-white/10 rounded-3xl p-8 mb-8">
+                        <h2 className="text-3xl font-bold mb-6">Economy, Politics, Innovation & Change</h2>
+                        <p className="text-gray-300 text-lg mb-6 leading-relaxed">
+                            EPIC is a platform dedicated to fostering innovation, building connections, and achieving excellence.
+                            We bring together students and companies to create meaningful experiences and drive positive change.
+                        </p>
+                    </div>
+                    <div className="bg-white/5 border border-white/10 rounded-3xl p-8">
+                        <h2 className="text-3xl font-bold mb-6">Contact Us</h2>
+                        <div className="space-y-4">
+                            <div className="flex items-center gap-4">
+                                <Mail className="text-white" size={24} />
+                                <div>
+                                    <p className="text-gray-400 text-sm">Email</p>
+                                    <a href="mailto:yaserzaki218@gmail.com" className="text-white text-lg hover:text-gray-300">yaserzaki218@gmail.com</a>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-4">
+                                <Phone className="text-white" size={24} />
+                                <div>
+                                    <p className="text-gray-400 text-sm">Phone</p>
+                                    <div className="text-white text-lg">
+                                        <a href="tel:01029167700" className="hover:text-gray-300 block">0102916 7700</a>
+                                        <a href="tel:01150351634" className="hover:text-gray-300 block">01150351634</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button onClick={() => setPage('home')} className="mt-8 text-gray-400 hover:text-white">← Back</button>
+                </div>
+            </div>
+        );
+    }
+
+    if (page === 'rewards') {
+        const redeem = (r) => {
+            if ((user.points || 0) >= r.points) {
+                const upd = { ...user, points: user.points - r.points };
+                setUser(upd);
+                setUsers(users.map(u => u.email === user.email ? upd : u));
+                alert(`Redeemed: ${r.name}!`);
+            } else {
+                alert('Not enough points!');
+            }
+        };
+
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white p-6">
+                <div className="max-w-6xl mx-auto pt-24">
+                    <h1 className="text-4xl font-bold mb-4">Rewards</h1>
+                    <p className="text-xl text-yellow-400 mb-8">Your Points: {user.points || 0}</p>
+                    <div className="grid md:grid-cols-2 gap-6">
+                        {rewards.map(r => (
+                            <div key={r.id} className="bg-white/5 border border-white/10 rounded-2xl p-6">
+                                <h3 className="text-xl font-bold mb-2">{r.name}</h3>
+                                <p className="text-lg text-yellow-400 mb-4">{r.points} points</p>
+                                <button onClick={() => redeem(r)} disabled={(user.points || 0) < r.points} className={`w-full py-2 rounded-xl font-semibold ${(user.points || 0) >= r.points ? 'bg-white text-black hover:bg-gray-200' : 'bg-gray-600 text-gray-400'}`}>Redeem</button>
+                            </div>
+                        ))}
+                    </div>
+                    <button onClick={() => setPage('home')} className="mt-8 text-gray-400 hover:text-white">← Back</button>
+                </div>
+            </div>
+        );
+    }
+
+    return null;
+};
+
+export default EpicWebsite;
